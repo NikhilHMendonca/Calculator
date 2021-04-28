@@ -46,11 +46,11 @@ class CalcyButtons extends Component {
 
     handleOnDigitSelect = (value, type) => {
         const { number1, operator, number2 } = this.state;
-        if(!!number1 && !operator) {
+        if (!!number1 && !operator) {
             const num = number1.toString();
             const newNumber1 = parseInt(num.concat(value))
             this.setState({ number1: newNumber1 })
-        } else if(!!number1 && operator){
+        } else if (!!number1 && operator) {
             const num = number2.toString();
             const newNumber2 = parseInt(num.concat(value))
             this.setState({ number2: newNumber2 })
@@ -66,8 +66,31 @@ class CalcyButtons extends Component {
 
     handleOnShowResultSelect = () => {
         const { number1, number2, operator } = this.state;
-        const result = number1 +  operator + number2;
+        var result;
+        switch (operator) {
+            case '+':
+                result = number1 + number2;
+                break;
+            case '-':
+                result = number1 - number2;
+                break;
+            case '*':
+                result = number1 * number2;
+                break;
+            case '÷':
+                result = number1 / number2;
+                break;
+        }
         this.setState({ result });
+    }
+
+    handleOnReset = () => {
+        this.setState({
+            number1: 0,
+            number2: 0,
+            operator: null,
+            result: null
+        });
     }
 
     render() {
@@ -75,12 +98,12 @@ class CalcyButtons extends Component {
         console.log(number1, number2)
         return (
             <div>
-                <Input>{result ? result : `${number1} ${operator} ${number2}`}</Input>
+                <Input>{result ? `${number1} ${operator} ${number2} = ${result}` : `${number1} ${operator} ${number2}`}</Input>
                 <Container>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('1', 'integer')}>1</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('2', 'integer')}>2</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('3', 'integer')}>3</CalcyButton>
-                    <CalcyButton>CE</CalcyButton>
+                    <CalcyButton onClick={this.handleOnReset}>CE</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('4', 'integer')}>4</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('5', 'integer')}>5</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('6', 'integer')}>6</CalcyButton>
@@ -88,11 +111,11 @@ class CalcyButtons extends Component {
                     <CalcyButton onClick={() => this.handleOnDigitSelect('7', 'integer')}>7</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('8', 'integer')}>8</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('9', 'integer')}>9</CalcyButton>
-                    <CalcyButton>-</CalcyButton>
+                    <CalcyButton onClick={() => this.handleOnOperationSelect('-', true)}>-</CalcyButton>
                     <CalcyButton onClick={() => this.handleOnDigitSelect('0', 'integer')}>0</CalcyButton>
                     <CalcyButton>.</CalcyButton>
-                    <CalcyButton>÷</CalcyButton>
-                    <CalcyButton>­*</CalcyButton>
+                    <CalcyButton onClick={() => this.handleOnOperationSelect('÷', true)}>÷</CalcyButton>
+                    <CalcyButton onClick={() => this.handleOnOperationSelect('*', true)}>­*</CalcyButton>
                 </Container>
                 <ResultButton onClick={this.handleOnShowResultSelect}>=</ResultButton>
             </div>
